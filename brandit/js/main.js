@@ -283,16 +283,67 @@ var SliderServices = {
 
 App.Control.install(SliderServices);
 App.Control.install({
-    el: '.js-tooltip',
-    name: 'Tooltip',
-    initialize: function () {
-        this.$el.tooltipster({
-					content: $('#tooltip-templates__content'),
-					theme:'tooltipster-shadow',
-					contentCloning: true
-				});
-    }
+	el: '.js-tooltip',
+	name: 'Tooltip',
+	initialize: function () {
+		this.$('.js-tooltip-1').tooltipster({
+				content: $('#tooltip-templates__content-1'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-2').tooltipster({
+				content: $('#tooltip-templates__content-2'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-3').tooltipster({
+				content: $('#tooltip-templates__content-3'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-4').tooltipster({
+				content: $('#tooltip-templates__content-4'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-5').tooltipster({
+				content: $('#tooltip-templates__content-5'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-6').tooltipster({
+				content: $('#tooltip-templates__content-6'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-7').tooltipster({
+				content: $('#tooltip-templates__content-7'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-8').tooltipster({
+				content: $('#tooltip-templates__content-8'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-9').tooltipster({
+				content: $('#tooltip-templates__content-9'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-10').tooltipster({
+				content: $('#tooltip-templates__content-10'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			}),
+			this.$('.js-tooltip-11').tooltipster({
+				content: $('#tooltip-templates__content-11'),
+				theme: 'tooltipster-shadow',
+				contentCloning: false
+			});
+	}
 });
+
 /*var FixedMenu = {
 		el: '.js-main-nav',
 		name: 'FixedMenu',
