@@ -1291,21 +1291,6 @@ var VerticalTabs = {
 };
 
 App.Control.install(VerticalTabs);
-var InfoSlider = {
-	el: '.js-info-slider',
-	name: 'InfoSlider',
-	initialize: function () {
-		this.$el.bxSlider({
-			mode: 'fade',
-			pager: false,
-			auto: false,
-			adaptiveHeight:true
-		});
-	}
-
-};
-App.Control.install(InfoSlider);
-
 var MainNavView = {
     el: '.js-main-nav',
     name: 'MainNavView',
@@ -1344,6 +1329,21 @@ var MainNavView = {
 };
 
 App.Control.install(MainNavView);
+var InfoSlider = {
+	el: '.js-info-slider',
+	name: 'InfoSlider',
+	initialize: function () {
+		this.$el.bxSlider({
+			mode: 'fade',
+			pager: false,
+			auto: false,
+			adaptiveHeight:true
+		});
+	}
+
+};
+App.Control.install(InfoSlider);
+
 var MainSlider = {
     el: '.js-main-slider',
     name: 'MainSlider',
