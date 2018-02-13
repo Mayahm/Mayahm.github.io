@@ -1076,16 +1076,17 @@ var Tabs = {
 
 App.Control.install(Tabs);
 App.Control.install({
-    el: '.js-tooltip',
-    name: 'Tooltip',
-    initialize: function () {
-        this.$el.tooltipster({
-					content: $('#tooltip-templates__content'),
-					theme:'tooltipster-shadow',
-					contentCloning: true
-				});
-    }
+	el: '.js-tooltip',
+	name: 'Tooltip',
+	initialize: function () {
+		this.$el.tooltipster({
+			content: $('#tooltip-templates__content'),
+			theme: 'tooltipster-shadow',
+			contentCloning: true
+		});
+	}
 });
+
 /**
  *
  * Абстрактный пример виджета, как мы будем использовать backbone.js.
