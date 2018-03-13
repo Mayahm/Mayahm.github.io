@@ -630,9 +630,7 @@ var EqualHeightBlocks = {
 			}
 		});
 
-		if ($(window).outerWidth() >= 650) {
-			this.items.css('height', maxHeight);
-		}
+		this.items.css('height', maxHeight);
 	}
 };
 
@@ -839,7 +837,7 @@ var PartiallyHidden = {
 	},
 
 	showHiddenContent: function() {
-		this.hiddenContent.toggleClass('is-hide');
+		this.hiddenContent.slideToggle().toggleClass('is-hide');
 		this.btn.toggleClass('is-open');
 		this.$el.toggleClass('is-hide');
 	}
@@ -1080,7 +1078,6 @@ App.Control.install({
 	name: 'Tooltip',
 	initialize: function () {
 		this.$el.tooltipster({
-			content: $('#tooltip-templates__content'),
 			theme: 'tooltipster-shadow',
 			contentCloning: true
 		});

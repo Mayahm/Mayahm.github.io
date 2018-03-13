@@ -424,6 +424,7 @@ App.Control.install({
 			this.$validateFalseFields = $([]);
 
 			$arInputs.each(function (index, value) {
+<<<<<<< HEAD
 
 				var $field = $(this);
 
@@ -440,6 +441,24 @@ App.Control.install({
 
 				});
 
+=======
+
+				var $field = $(this);
+
+				fieldInstance = $field.parsley(self.parsleyValidateOpts);
+
+				fieldInstance.off('field:success');
+				fieldInstance.off('field:error');
+
+				fieldInstance.on('field:success', function () {
+
+					self.$validateFalseFields = self.$validateFalseFields.not($field);
+
+					self.checkValidateState();
+
+				});
+
+>>>>>>> 19a47604f560d22217d448bea7d5ff76b28967aa
 				fieldInstance.on('field:error', function () {
 
 					if (!self.$validateFalseFields.filter($field).length)
@@ -595,7 +614,11 @@ App.Control.install({
     initPrivacyAgree: function () {
         var self = this;
         this.privacyAgree.find('.js-form-privacy-agree-responsive-btn').on( 'click', function() {
+<<<<<<< HEAD
             self.privacyAgree.find('.js-form-privacy-agree-full').removeClass('hide-up-to-md hide-xs');
+=======
+            self.privacyAgree.find('.js-form-privacy-agree-full').removeClass('hide-up-to-mdhide-xs');
+>>>>>>> 19a47604f560d22217d448bea7d5ff76b28967aa
             self.privacyAgree.find('.js-form-privacy-agree-short').hide(0);
         });
     this.privacyAgree.find('.js-form-privacy-agree-close-btn').on('click', function() {
@@ -1569,6 +1592,33 @@ var VerticalTabs = {
 };
 
 App.Control.install(VerticalTabs);
+var InfoSlider = {
+	el: '.js-info-slider',
+	name: 'InfoSlider',
+	initialize: function () {
+		this.$el.bxSlider({
+			mode: 'fade',
+			pager: false,
+			auto: false,
+			adaptiveHeight: true
+		});
+	}
+};
+App.Control.install(InfoSlider);
+
+var MainSlider = {
+    el: '.js-main-slider',
+    name: 'MainSlider',
+    initialize: function() {
+        this.$el.bxSlider({
+            mode: 'fade',
+            pager: false,
+            auto: true
+        });
+    }
+};
+
+App.Control.install(MainSlider);
 var MainNavView = {
     el: '.js-main-nav',
     name: 'MainNavView',
@@ -1607,6 +1657,7 @@ var MainNavView = {
 };
 
 App.Control.install(MainNavView);
+<<<<<<< HEAD
 var MainSlider = {
     el: '.js-main-slider',
     name: 'MainSlider',
@@ -1620,6 +1671,8 @@ var MainSlider = {
 };
 
 App.Control.install(MainSlider);
+=======
+>>>>>>> 19a47604f560d22217d448bea7d5ff76b28967aa
 var VisitedPages = {
 	el: '.js-visited-pages',
 	name: 'VisitedPages',
