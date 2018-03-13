@@ -26,7 +26,17 @@ $(document).ready(function() {
       style: 'italic'
     });
 
-    Promise.all([font.load(), fontBold.load(), fontItalic.load(), fontBoldItalic.load()]).then(function () {
+    var fontCondensedRegular = new FontFaceObserver('Roboto Condensed', {
+      weight: 400,
+      style: 'normal'
+    });
+
+    var fontCondensedBold = new FontFaceObserver('Roboto Condensed', {
+      weight: 700,
+      style: 'normal'
+    });
+
+    Promise.all([font.load(), fontBold.load(), fontItalic.load(), fontBoldItalic.load(), fontCondensedRegular.load(), fontCondensedBold.load()]).then(function () {
       document.documentElement.className += " fonts-loaded";
 
       sessionStorage.foutFontsLoaded = true;
@@ -42,30 +52,35 @@ $(document).ready(function() {
 
 	$('.js-select').select2({
   		minimumResultsForSearch: Infinity
-  	});
+  });
+
+  $('.js-lp-region-select').select2({
+      minimumResultsForSearch: Infinity,
+      theme: 'lp-region-select'
+  });
 });
 
 
 var Accordeon = {
 	el: '.js-accordeon',
 	name: "Accordeon",
+
 	initialize: function () {
 		this.answer = this.$(".js-accordeon__answer");
 		this.currentQuestion = this.$(".js-accordeon__question");
-		this.currentQuestion.not(":eq(0)").removeClass('accordeon__question--rotate');
-		this.answer.not(":eq(0)").hide();
-
+		this.answer.not(this.currentQuestion.filter('.accordeon__question--rotate').next()).hide();
 	},
+
 	events: {
 		'click .js-accordeon__question': 'accordeonItemSwitch'
 	},
+
 	accordeonItemSwitch: function (evt) {
 		this.currentAnswer = $(evt.currentTarget).next();
 		this.answer.not(this.currentAnswer).slideUp();
 		this.currentAnswer.slideToggle(700);
 		$(evt.currentTarget).toggleClass('accordeon__question--rotate');
 		this.currentQuestion.not($(evt.currentTarget)).removeClass('accordeon__question--rotate');
-		
 	}
 };
 App.Control.install(Accordeon);
@@ -74,7 +89,7 @@ var BackToTop = {
     el: '.js-back-to-top',
     name: 'BackToTop',
     initialize: function() {
-        this.offset = 1000;
+        this.offset = 600;
         this.backToTopBtn = this.$('.js-back-to-top__btn');
 
         var self = this;
@@ -98,9 +113,9 @@ var BackToTop = {
 
     fadeIn: function() {
         if($(window).scrollTop() > this.offset) {
-            this.$el.removeClass('buttons-round--hidden');
+            this.$el.find('.buttons-round__right').removeClass('buttons-round--hidden');
         } else {
-            this.$el.addClass('buttons-round--hidden');
+			this.$el.find('.buttons-round__right').addClass('buttons-round--hidden');
         }
     }
 };
@@ -149,11 +164,16 @@ var EqualHeight = {
 
     setEqualHeight: function() {
         var maxHeight = 0;
+        var isActive;
 
         this.block.css('height', 'auto');
 
         this.block.each(function(index) {
             var blockHeight = parseInt($(this).outerHeight());
+
+            if($(this).data('active')) {
+                isActive = true;
+            }
 
             if (blockHeight > maxHeight) {
                 maxHeight = blockHeight;
@@ -161,6 +181,11 @@ var EqualHeight = {
         });
 
         this.block.css('height', maxHeight);
+
+        if(isActive) {
+            var newMaxHeight = maxHeight + 20;
+            this.block.filter('[data-active]').css('height', newMaxHeight);
+        }
     }
 };
 
@@ -251,166 +276,419 @@ App.Control.install({
 		});
 	}
 });
+
 App.Control.install({
-    el: '.js-form',
-    name: 'FormFabric',
-    initialize: function () {
+	el: '.js-lg-modal',
+	name: 'FancyLgModal',
+	initialize: function () {
+		var self = this;
+		this.$el.fancybox({
+			wrapCSS: 'fancy-lg-modal',
+			margin: ($(window).width() > 937) ? 20 : 5,
+			fitToView: false,
+			padding: 0,
+			helpers : {
+				overlay : {
+					css : {
+						'background' : 'rgba(27, 71, 105, 0.7)'
+					}
+				}
+			}
+		});
+	}
+});
+App.Control.install({
+	el: '.js-form',
+	name: 'FormFabric',
 
-        this.$('.js-select-editable').select2({
-            minimumResultsForSearch: Infinity,
-            theme: "editable"
-        });
+	/**
+	 * Submit button selector
+	 */
+	submitButton: '.js-form-submit',
 
-        this.$('.js-form-select').select2({
-            minimumResultsForSearch: Infinity,
-            theme: "form-select"
-        });
+	/**
+	 * Options for Parsley.js validation plugin
+	 */
+	parsleyValidateOpts: {
+		errorsMessagesDisabled: true,
+		errorClass: '_error',
+		successClass: '_success'
+	},
+
+	$validateFalseFields: null,
+
+	/**
+	 * Get control of form
+	 */
+	initialize: function () {
+
+		/**
+		 * UI elements initialization...
+		 */
+
+		this.$('.js-select-editable').select2({
+			minimumResultsForSearch: Infinity,
+			theme: 'editable'
+		});
+
+		this.$('.js-form-select').select2({
+			minimumResultsForSearch: Infinity,
+			theme: 'form-select'
+		});
 
 
-        // Select2 внутри fancybox работает некорректно, так как z-index fancybox больше.
-        // Инициализируем плагин с дополнительным классом form-select-in-modal
-        // для задания нужного z-index выпадающему списку
-        this.$('.js-form-select-in-modal').select2({
-            minimumResultsForSearch: Infinity,
-            theme: "form-select form-select-in-modal"
-        });
+		// Select2 внутри fancybox работает некорректно, так как z-index fancybox больше.
+		// Инициализируем плагин с дополнительным классом form-select-in-modal
+		// для задания нужного z-index выпадающему списку
+		this.$('.js-form-select-in-modal').select2({
+			minimumResultsForSearch: Infinity,
+			theme: 'form-select form-select-in-modal'
+		});
 
-        this.multiSelectInputs = this.$el.find('.js-form-multiselect');
-        this.choiseRadioContent = this.$el.find('.js-form-radio-choise');
-        this.choiseTabsContent = this.$el.find('.js-form-tabs-changer');
-        this.privacyAgree = this.$el.find('.js-form-privacy-agree');
+		/**
+		 * Check and find UI interactive fields
+		 */
 
-        if(this.choiseRadioContent)
-            this.initRadioChoisingControl();
+		this.multiSelectInputs = this.$el.find('.js-form-multiselect');
+		this.choiseRadioContent = this.$el.find('.js-form-radio-choise');
+		this.choiseTabsContent = this.$el.find('.js-form-tabs-changer');
+		this.privacyAgree = this.$el.find('.js-form-privacy-agree');
 
-        if(this.choiseTabsContent)
-            this.initTabsContentControl();
+		/**
+		 * More UI elements initialization...
+		 */
 
-        if(this.privacyAgree)
-            this.initPrivacyAgree();
+		if (this.choiseRadioContent)
+			this.initRadioChoisingControl();
 
-        if(this.multiSelectInputs)
-            this.initMultiSelectControl();
+		if (this.choiseTabsContent)
+			this.initTabsContentControl();
 
-		if(_.isFunction(this.initializeEx)) {
-			this.initializeEx();
+		if (this.privacyAgree)
+			this.initPrivacyAgree();
+
+		if (this.multiSelectInputs)
+			this.initMultiSelectControl();
+
+		/**
+		 * Add masks and validation rules for phone fields
+		 */
+
+		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phone'});
+		this.$el.find('input[type=\'tel\']').parsley({phone: ''});
+
+		/**
+		 * Submit by button click event handler
+		 */
+
+		if (_.isElement(this.$el.find(this.submitButton)[0]))
+			this.$el.find(this.submitButton).on('click', this.$el, _.bind(this.submitProcess, this));
+
+		/**
+		 * Get URL to send
+		 */
+		this.gateway = this.buildGatewayPath();
+
+		this.$validateFalseFields = $([]);
+	},
+
+
+	/**
+	 * Action url definition
+	 *
+	 * @returns {URI}
+	 */
+	buildGatewayPath: function () {
+
+		if (this.$el.data('gateway'))
+			var uri = new URI(this.$el.data('gateway'));
+		else
+			var uri = new URI();
+
+		uri
+			.setSearch('AJAX', 'Y')
+			.toString();
+		return uri;
+	},
+
+	/**
+	 * Vaidate active fields by Parsley.js
+	 *
+	 * @param $arInputs
+	 * @returns {boolean}
+	 */
+	validateForm: function ($arInputs) {
+		if (_.isEmpty(this.$el.data('novalidate'))) {
+			var self = this, result = true, fieldInstance, fieldResult;
+
+			this.$validateFalseFields = $([]);
+
+			$arInputs.each(function (index, value) {
+
+				var $field = $(this);
+
+				fieldInstance = $field.parsley(self.parsleyValidateOpts);
+
+				fieldInstance.off('field:success');
+				fieldInstance.off('field:error');
+
+				fieldInstance.on('field:success', function () {
+
+					self.$validateFalseFields = self.$validateFalseFields.not($field);
+
+					self.checkValidateState();
+
+				});
+
+				fieldInstance.on('field:error', function () {
+
+					if (!self.$validateFalseFields.filter($field).length)
+						self.$validateFalseFields.push($field.get()[0]);
+
+					self.checkValidateState();
+
+				});
+
+				fieldResult = fieldInstance.validate();
+
+				if (_.isBoolean(fieldResult) && fieldResult === true) {
+					_.noop();
+				} else {
+					result = false;
+				}
+
+			});
+
+			return result;
+		} else
+			return true;
+	},
+
+	/**
+	 * Send button class control
+	 */
+	checkValidateState: function () {
+
+		if (this.$validateFalseFields.length) {
+			this.$el.find(this.submitButton).addClass('_disabled');
+		} else {
+			this.$el.find(this.submitButton).removeClass('_disabled');
 		}
-    },
 
-    initMultiSelectControl: function () {
-        var self = this;
-        _.each(this.multiSelectInputs, function(multiSelect){
+	},
 
-            $multiSelect = $(multiSelect);
+	/**
+	 * Submit initial function
+	 *
+	 * @param event
+	 */
+	submitProcess: function (event) {
+		var $initedInputs = this.collectInitedInputs();
+		if (this.validateForm($initedInputs)) {
+			this.waitingStateOn();
+			this.submitData($initedInputs);
+		}
+	},
 
-            var emptyText = !_.isEmpty($multiSelect.data('emptyText')) ? $multiSelect.data('emptyText') : 'Ничго не выбрано';
+	/**
+	 * Request handler
+	 *
+	 * @param $initedInputs
+	 */
+	submitData: function ($initedInputs) {
 
-            this.$('.js-form-multiselect').selectpicker({
-                selectedTextFormat: "count > 2",
-                selectOnTab: true,
-                noneSelectedText: emptyText,
-            });
+		var self = this;
 
-        });
-    },
+		$.ajax({
+			url: self.gateway,
+			data: self.formData($initedInputs),
+			processData: false,
+			contentType: false,
+			type: 'POST'
+		}).always(function (data, status, xhr) {
+			self.afterSubmitSuccess(data, xhr);
+		});
 
-    initPrivacyAgree: function () {
-        var self = this;
-        this.privacyAgree.find('.js-form-privacy-agree-responsive-btn').on( 'click', function() {
-            self.privacyAgree.find('.js-form-privacy-agree-full').removeClass('hide-up-to-md');
-            self.privacyAgree.find('.js-form-privacy-agree-short').hide(0);
-        });
-    },
+	},
 
-    initTabsContentControl: function () {
-        var self = this;
-        _.each(this.choiseTabsContent, function(tabsContent){
-            $tabsContent = $(tabsContent);
-            $controlBtns = $tabsContent.find('.js-form-tabs-changer-btns')
-                .find('span');
-            $controlTabs = $tabsContent.find('.js-form-tabs-changer-content')
-                .find('.js-form-tabs-changer-block');
+	/**
+	 * Simple request callback
+	 *
+	 * @param data
+	 * @param xhr
+	 */
+	afterSubmitSuccess: function (data, xhr) {
+		this.waitingStateOff();
+	},
 
-            $controlTabs.hide(0);
+	/**
+	 * Active fields collector
+	 *
+	 * @returns {$()}
+	 */
+	collectInitedInputs: function () {
 
-            if($controlBtns.length > 0) {
-                $activeBtn = $controlBtns.eq(0);
-                $controlBtns.not($activeBtn)
-                    .addClass('dotted cur-pointer');
-                $activeTab = $controlTabs.eq(0);
-                $activeTab.show(0);
-            }
+		var $formInputs, $tmpInputs;
 
-            $controlBtns.on( 'click', function() {
-                self.contentTabChange($(this));
-            });
-        });
-    },
-    contentTabChange: function($el) {
-        $tabsContent = $el.closest('.js-form-tabs-changer');
-        $controlBtns = $tabsContent.find('.js-form-tabs-changer-btns')
-            .find('span');
-        $controlTabs = $tabsContent.find('.js-form-tabs-changer-content')
-            .find('.js-form-tabs-changer-block');
+		$tmpInputs = this.$el.find(':input').not('button');
 
-        $el.removeClass('dotted cur-pointer');
-        $tab2Show = $controlTabs.eq($controlBtns.index($el));
-        $controlTabs.not($tab2Show)
-            .hide(0);
-        $tab2Show.show(0);
-        $controlBtns.not($el)
-            .addClass('dotted cur-pointer');
-    },
+		$formInputs = $tmpInputs.filter(':visible')
+			.add(this.$el.find('.input-file').filter(':visible').find(':file'))
+			.add(this.$el.find('.input-multifile').filter(':visible').find(':file'))
+			.add($tmpInputs.filter('input[type=hidden]'));
 
-    initRadioChoisingControl: function () {
-        var self = this;
-        _.each(this.choiseRadioContent, function(radioCollection){
-            $control = $(radioCollection);
-            $controlRadios = $control.find('input[type="radio"]');
-            $controledBlocks = $controlled = self.findClosestChoisingBlock($control)
-                .find('.js-form-radio-content-block');
-            $controledBlocks.hide(0);
-            $activeRadioOpt = $controlRadios.filter(':checked');
-            if($activeRadioOpt) {
-                $activeOptIndex = $controlRadios.index($activeRadioOpt);
-                if($activeOptIndex >= 0) {
-                    $controledBlocks.eq($activeOptIndex)
-                        .show(0);
-                }
-            }
-            $controlRadios.on( 'click', function() {
-                self.choisingBlockChange($(this));
-            });
-        });
-    },
-    choisingBlockChange: function($el) {
-        $control = $el.closest('.js-form-radio-choise');
-        $controledBlocks = this.findClosestChoisingBlock($control)
-            .find('.js-form-radio-content-block');
-        $block2Show = $controledBlocks.eq($control.find('input[type="radio"]')
-            .index($el));
-        $controledBlocks.not($block2Show)
-            .hide(0);
-        $block2Show.show(0);
-    },
-    findClosestChoisingBlock: function($el) {
-        if($el.parent().length > 0) {
-            $findRes = $el.parent()
-                .find('.js-form-radio-content');
-            if ($findRes.length > 0) {
-                return $($findRes[0]);
-            } else {
-                return  this.findClosestChoisingBlock($el.parent())
-            }
-        }
-        else
-            return $();
-    },
+		return $formInputs;
+	},
+
+	/**
+	 * Form data object constructor
+	 *
+	 * @param $initedInputs
+	 * @returns FormData
+	 */
+	formData: function ($initedInputs) {
+
+		var $dinamicForm = $(document.createElement('form'));
+
+		$initedInputs.each(function () {
+			var $_cloneInput = $($(this).clone());
+			if ($_cloneInput.is('select'))
+				$_cloneInput.val($(this).val());
+			$_cloneInput.appendTo($dinamicForm);
+		});
+
+		return new FormData($dinamicForm[0]);
+	},
+
+	/**
+	 * Waiting states...
+	 */
+
 	waitingStateOn: function () {
 		$(document.createElement('div')).addClass('ui-loader').prependTo(this.$el);
 	},
 	waitingStateOff: function () {
 		this.$el.find('.ui-loader').remove();
+	},
+
+	/**
+	 * UI controls initialises...
+	 */
+
+	initMultiSelectControl: function () {
+		var self = this;
+		_.each(this.multiSelectInputs, function (multiSelect) {
+
+			$multiSelect = $(multiSelect);
+
+			var emptyText = !_.isEmpty($multiSelect.data('emptyText')) ? $multiSelect.data('emptyText') : 'Ничго не выбрано';
+
+			this.$('.js-form-multiselect').selectpicker({
+				selectedTextFormat: 'count > 2',
+				selectOnTab: true,
+				noneSelectedText: emptyText
+			});
+
+		});
+	},
+
+    initPrivacyAgree: function () {
+        var self = this;
+        this.privacyAgree.find('.js-form-privacy-agree-responsive-btn').on( 'click', function() {
+            self.privacyAgree.find('.js-form-privacy-agree-full').removeClass('hide-up-to-md hide-xs');
+            self.privacyAgree.find('.js-form-privacy-agree-short').hide(0);
+        });
+    this.privacyAgree.find('.js-form-privacy-agree-close-btn').on('click', function() {
+            self.privacyAgree.find('.js-form-privacy-agree-full').addClass('hide-xs');
+            self.privacyAgree.find('.js-form-privacy-agree-short').show(0);
+        });},
+
+	initTabsContentControl: function () {
+		var self = this;
+		_.each(this.choiseTabsContent, function (tabsContent) {
+			$tabsContent = $(tabsContent);
+			$controlBtns = $tabsContent.find('.js-form-tabs-changer-btns')
+				.find('span');
+			$controlTabs = $tabsContent.find('.js-form-tabs-changer-content')
+				.find('.js-form-tabs-changer-block');
+
+			$controlTabs.hide(0);
+
+			if ($controlBtns.length > 0) {
+				$activeBtn = $controlBtns.eq(0);
+				$controlBtns.not($activeBtn)
+					.addClass('dotted cur-pointer');
+				$activeTab = $controlTabs.eq(0);
+				$activeTab.show(0);
+			}
+
+			$controlBtns.on('click', function () {
+				self.contentTabChange($(this));
+			});
+		});
+	},
+
+	contentTabChange: function ($el) {
+		$tabsContent = $el.closest('.js-form-tabs-changer');
+		$controlBtns = $tabsContent.find('.js-form-tabs-changer-btns')
+			.find('span');
+		$controlTabs = $tabsContent.find('.js-form-tabs-changer-content')
+			.find('.js-form-tabs-changer-block');
+
+		$el.removeClass('dotted cur-pointer');
+		$tab2Show = $controlTabs.eq($controlBtns.index($el));
+		$controlTabs.not($tab2Show)
+			.hide(0);
+		$tab2Show.show(0);
+		$controlBtns.not($el)
+			.addClass('dotted cur-pointer');
+	},
+
+	initRadioChoisingControl: function () {
+		var self = this;
+		_.each(this.choiseRadioContent, function (radioCollection) {
+			$control = $(radioCollection);
+			$controlRadios = $control.find('input[type="radio"]');
+			$controledBlocks = $controlled = self.findClosestChoisingBlock($control)
+				.find('.js-form-radio-content-block');
+			$controledBlocks.hide(0);
+			$activeRadioOpt = $controlRadios.filter(':checked');
+			if ($activeRadioOpt) {
+				$activeOptIndex = $controlRadios.index($activeRadioOpt);
+				if ($activeOptIndex >= 0) {
+					$controledBlocks.eq($activeOptIndex)
+						.show(0);
+				}
+			}
+			$controlRadios.on('click', function () {
+				self.choisingBlockChange($(this));
+			});
+		});
+	},
+
+	choisingBlockChange: function ($el) {
+		$control = $el.closest('.js-form-radio-choise');
+		$controledBlocks = this.findClosestChoisingBlock($control)
+			.find('.js-form-radio-content-block');
+		$block2Show = $controledBlocks.eq($control.find('input[type="radio"]')
+			.index($el));
+		$controledBlocks.not($block2Show)
+			.hide(0);
+		$block2Show.show(0);
+	},
+
+	findClosestChoisingBlock: function ($el) {
+		if ($el.parent().length > 0) {
+			$findRes = $el.parent()
+				.find('.js-form-radio-content');
+			if ($findRes.length > 0) {
+				return $($findRes[0]);
+			} else {
+				return this.findClosestChoisingBlock($el.parent());
+			}
+		}
+		else
+			return $();
 	}
 });
 var MainOfficeMap = {
@@ -1329,21 +1607,6 @@ var MainNavView = {
 };
 
 App.Control.install(MainNavView);
-var InfoSlider = {
-	el: '.js-info-slider',
-	name: 'InfoSlider',
-	initialize: function () {
-		this.$el.bxSlider({
-			mode: 'fade',
-			pager: false,
-			auto: false,
-			adaptiveHeight:true
-		});
-	}
-
-};
-App.Control.install(InfoSlider);
-
 var MainSlider = {
     el: '.js-main-slider',
     name: 'MainSlider',
@@ -1549,7 +1812,7 @@ App.Control.install({
 		'change [type=file]': 'changeValue'
 	},
 	changeValue: function() {
-		this.$inputPath.val(this.$inputFile.val().replace('C:\\fakepath\\',''));
+		this.$inputPath.val(this.$inputFile.val().replace('C:\\fakepath\\','')).trigger('input');
 	}
 });
 App.Control.install({
@@ -1563,14 +1826,27 @@ App.Control.install({
 
 		this.inputName = this.$el.data('name');
 
-        this.$inputButton = $(document.createElement('div'))
+        if(this.$el.data('icon')) {
+           this.$inputButton = $(document.createElement('span'))
+            .addClass('dotted dotted--has-clip-icon')
+            .html('Прикрепить файл')
+            .prependTo(this.$el);
+        } else {
+            this.$inputButton = $(document.createElement('div'))
             .addClass('btn btn-input-multifile')
             .html('Выбрать файл')
             .prependTo(this.$el);
+        }
 
-        this.$fileList = $(document.createElement('div'))
-            .addClass('input-multifile__file-list')
-            .prependTo(this.$el);
+        if(this.$el.data('icon')) {
+            this.$fileList = $(document.createElement('div'))
+                .addClass('input-multifile__file-list input-multifile__file-list--no-padding')
+                .prependTo(this.$el);
+        } else {
+            this.$fileList = $(document.createElement('div'))
+                .addClass('input-multifile__file-list')
+                .prependTo(this.$el);
+        }
 
         this.$inputButton.on( 'click', function() {
             self.startChoose($(this));
