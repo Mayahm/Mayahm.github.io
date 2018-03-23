@@ -85,6 +85,27 @@ var Accordeon = {
 };
 App.Control.install(Accordeon);
 
+var BackToTopLp = {
+    el: '.js-back-to-top-lp',
+    name: 'BackToTopLp',
+    initialize: function() {
+
+    },
+
+    events: {
+        'click': 'scrollToTop'
+    },
+
+    scrollToTop: function(ev) {
+        ev.preventDefault();
+
+        $('html, body').animate({
+            scrollTop: 0
+        }, 1800);
+    }
+};
+
+App.Control.install(BackToTopLp);
 var BackToTop = {
     el: '.js-back-to-top',
     name: 'BackToTop',
@@ -121,6 +142,65 @@ var BackToTop = {
 };
 
 App.Control.install(BackToTop);
+var ClientsSlider = {
+	el: '.js-content-slider-lp',
+	name: 'ClientsSlider',
+	sliderMd: null,
+	initialize: function () {
+		this.clientLp = this.$('.client-lp');
+		this.firstBlockClient= this.clientLp.slice(0,8);
+		this.sliderLg;
+		//console.log(this.firstBlockClient);
+
+		var self = this;
+		self.initLgSlider();
+		self.renderMode();
+		/*$(window).bind('resize', function () {
+			self.resizeSlider();
+		});*/
+	},
+	renderMode: function () {
+		var self = this;
+		if ($(window).outerWidth() < 768) {
+			self.clientLp.unwrap();
+			self.sliderLg.destroySlider();
+			self.initMdSlider();
+		} else  {
+			self.initLgSlider();
+			//self.sliderLg = null;
+		}
+
+	},
+	initLgSlider: function () {
+		this.sliderLg = this.$el.bxSlider({
+			slideMargin: 20,
+			adaptiveHeight: true,
+			infiniteLoop: true
+		});
+	},
+	initMdSlider: function () {
+		this.sliderMd = this.$el.bxSlider({
+			slideMargin: 20,
+			adaptiveHeight: true,
+			infiniteLoop: true
+		});
+	},
+	/*resizeSlider: function(){
+		var self=this;
+		if(this.sliderMd && $(window).outerWidth() > 768) {
+			this.sliderMd.destroySlider();
+			self.firstBlockClient.wrapAll('<div class="clients-lp__group">');
+			self.initLgSlider();
+		} else if (!this.sliderMd && $(window).outerWidth() < 768)  {
+			this.initLgSlider();
+			self.renderMode();
+
+		}
+	}*/
+};
+
+App.Control.install(ClientsSlider);
+
 App.Control.install({
 	el: '.js-dotted-nav-slider',
 	name: 'DottedNavSlider',
@@ -190,11 +270,62 @@ var EqualHeight = {
 };
 
 App.Control.install(EqualHeight);
+/*var ExpertsSlider = {
+	el: '.js-experts-block-slider',
+	name: 'ExpertsSlider',
+	slider:null,
+	initialize: function () {
+		this.renderMode();
+		var self = this;
+		$(window).bind('resize', function () {
+			self.resizeSlider();
+		});
+	},
+	renderMode: function () {
+		var self = this;
+		if ($(window).outerWidth() < 768) {
+			self.initSlider();
+		} else {
+			self.initSlider();
+			self.slider.destroySlider();
+		}
+	},
+	resizeSlider: function(){
+		var self = this;
+		if ($(window).outerWidth() < 768) {
+			self.initSlider();
+		} else {
+			self.destroySlider();
+		}
+	},
+
+	initSlider: function () {
+		if(!this.slider) {
+		this.slider = this.$el.bxSlider({
+			adaptiveHeight: true,
+			infiniteLoop: true,
+			pager: false,
+			slideWidth: 106,
+			maxSlides: 2
+		});
+		}
+	},
+	destroySlider: function(){
+		if(this.slider) {
+			this.slider.destroySlider();
+			this.slider=null;
+		}
+	}
+
+};
+
+App.Control.install(ExpertsSlider);*/
+
 App.Control.install({
-    el: '.js-fancy-media',
-    name: 'FancyMedia',
-    initialize: function () {
-        var self = this;
+		el: '.js-fancy-media',
+		name: 'FancyMedia',
+		initialize: function () {
+				var self = this;
 		var fitToView = this.$el.data('fullsize') ? false : true;
 		this.$el.fancybox({
 			wrapCSS: 'fancy-media',
@@ -211,8 +342,9 @@ App.Control.install({
 				}
 			}
 		});
-    }
+		}
 });
+
 
 App.Control.install({
 	el: '.js-fancy-modal',
@@ -224,6 +356,43 @@ App.Control.install({
 			margin: ($(window).width() > 937) ? 20 : 5,
 			fitToView: false,
 			padding: 0,
+			helpers : {
+				overlay : {
+					css : {
+						'background' : 'rgba(27, 71, 105, 0.7)'
+					}
+				}
+			}
+		});
+	}
+});
+
+
+App.Control.install({
+	el: '.js-fancy-modal-lp',
+	name: 'FancyModalLp',
+	initialize: function () {
+		var self = this;
+		this.$el.fancybox({
+			wrapCSS: 'fancy-modal-lp',
+			margin: ($(window).width() > 937) ? 20 : 5,
+			fitToView: false,
+			padding: 0
+		});
+	}
+});
+
+
+App.Control.install({
+	el: '.js-fancy-reviews-text',
+	name: 'FancyReviewsTextModal',
+	initialize: function () {
+		var self = this;
+		this.$el.fancybox({
+			wrapCSS: 'fancy-reviews-text',
+			margin: ($(window).width() > 937) ? 20 : 5,
+			fitToView: false,
+			padding: 20,
 			helpers : {
 				overlay : {
 					css : {
@@ -256,6 +425,7 @@ App.Control.install({
 	}
 });
 
+
 App.Control.install({
 	el: '.js-fancy-text',
 	name: 'FancyTextModal',
@@ -277,6 +447,7 @@ App.Control.install({
 	}
 });
 
+
 App.Control.install({
 	el: '.js-lg-modal',
 	name: 'FancyLgModal',
@@ -297,6 +468,7 @@ App.Control.install({
 		});
 	}
 });
+
 App.Control.install({
 	el: '.js-form',
 	name: 'FormFabric',
@@ -1096,16 +1268,17 @@ var ShowContent = {
 	el: '.js-show-content',
 	name: 'ShowContent',
 
-	initialize: function() {
+	initialize: function () {
 		this.btn = this.$('.js-show-content__btn');
 		this.hiddenContent = this.$('.js-show-content__content');
+		this.hiddenBlock = this.$('.js-show-content__block');
 	},
 
 	events: {
-        'click .js-show-content__btn': 'showContent'
-    },
+		'click .js-show-content__btn': 'showContent'
+	},
 
-	scrollTo: function() {
+	scrollTo: function () {
 		var self = this;
 
 		$('html, body').animate({
@@ -1113,27 +1286,39 @@ var ShowContent = {
 		}, 1500);
 	},
 
-	showContent: function(e) {
+	showContent: function (e) {
 		e.preventDefault();
 
 		var needScroll = false;
-		if(!$(e.currentTarget).hasClass('open') && $(e.currentTarget).data('scroll-to')) {
+		if (!$(e.currentTarget).hasClass('open') && $(e.currentTarget).data('scroll-to')) {
 			needScroll = true;
 		}
 
-		$(e.currentTarget).toggleClass('open');
-		if(!$(e.currentTarget).data('attribute')) {
-			$(e.currentTarget).next(this.hiddenContent).slideToggle();
+		if(!$(e.currentTarget).data('numbered-list')) {
+			$(e.currentTarget).toggleClass('open');
+		} else if($(e.currentTarget).data('numbered-list')) {
+			if($(window).outerWidth() < 479) {
+				$(e.currentTarget).toggleClass('open');
+			}
+		}
+
+		if (!$(e.currentTarget).data('attribute')) {
+			$(e.currentTarget).next('.js-show-content__content').slideToggle();
+
+			if ($(window).outerWidth() <= 767) {
+				this.$el.find('.js-show-content__block').fadeToggle();
+				this.$el.toggleClass('disputes-slider-lp--open-block');
+			}
 		}
 
 		// Если скрытую информацию и кнопку-триггер невозможно разместить в общем контейнере
 		// Или скрытая информация расположена не после кнопки-триггера
-		if(this.$el.filter('[data-attribute]')) {
+		if (this.$el.filter('[data-attribute]')) {
 			this.dataTarget = $(e.currentTarget).attr('data-attribute');
 			$('[data-target=' + this.dataTarget + ']').slideToggle();
 		}
 
-		if(needScroll) {
+		if (needScroll) {
 			this.scrollTo();
 		}
 	}
@@ -1271,6 +1456,59 @@ var SliderEmployeesReviews = {
 };
 
 App.Control.install(SliderEmployeesReviews);
+var SliderPriceCards = {
+	el: '.js-slider-price-cards',
+	name: 'SliderPriceCards',
+	breakpoint: 1099,
+	slider: null,
+	scroll: null,
+	elementsCount: 0,
+
+	initialize: function() {
+		this.elementsCount = this.$el.find('').length;
+		var self = this;
+
+		this.renderMode();
+
+		$(window).bind('resize', function() {
+			self.renderMode();
+		});
+	},
+
+	renderMode: function () {
+		var self = this;
+
+		if($(window).outerWidth() > self.breakpoint) {
+			self.destroySlider();
+		} else {
+			self.initSlider();
+		}
+	},
+
+	initSlider: function() {
+		if(!this.slider) {
+			this.slider = this.$el.bxSlider({
+				pager: false,
+				controls: false,
+				slideWidth: 400,
+				slideMargin: 20,
+				minSlides: 1,
+				maxSlides: 1,
+				infiniteLoop: false,
+				startSlide: 1
+			});
+		}
+	},
+
+	destroySlider: function() {
+		if(this.slider) {
+			this.slider.destroySlider();
+			this.slider = null;
+		}
+	}
+};
+
+App.Control.install(SliderPriceCards);
 var SliderPromoPublications = {
     el: '.js-slider-promo-publications',
     name: 'SliderPromoPublications',
@@ -1569,6 +1807,21 @@ var VerticalTabs = {
 };
 
 App.Control.install(VerticalTabs);
+var DisputesSlider = {
+	el: '.js-disputes-slider-lp',
+	name: 'DisputesSlider',
+	initialize: function () {
+		this.$el.bxSlider({
+			slideMargin: 20,
+			adaptiveHeight: true,
+			infiniteLoop: true,
+			touchEnabled: false
+		});
+	}
+};
+
+App.Control.install(DisputesSlider);
+
 var MainNavView = {
     el: '.js-main-nav',
     name: 'MainNavView',
@@ -1780,10 +2033,31 @@ App.Control.install({
     })
 
 }(window.jQuery);
+var FileIconInput = {
+	el: '.js-form-card-block-file',
+	name: 'FileIconInput',
+
+	initialize: function() {
+		this.fileInput = this.$('input[type="file"]');
+		this.textInput = this.$('input[type="text"]')
+	},
+	events: {
+		'change [type=file]': 'changeValue'
+	},
+	changeValue:function(){
+
+		var fileName = this.fileInput.val().replace(/.*\\/, "");
+		this.textInput.val(fileName);
+	}
+};
+
+App.Control.install(FileIconInput);
+
 App.Control.install({
 	el: '.input-file',
 	name: 'InputFile',
 	initialize: function () {
+		console.log(2);
 
 		this.$inputFile = this.$('input[type=file]')
 			.addClass('file-hidden');
@@ -1815,6 +2089,7 @@ App.Control.install({
 		this.$inputPath.val(this.$inputFile.val().replace('C:\\fakepath\\','')).trigger('input');
 	}
 });
+
 App.Control.install({
     el: '.input-multifile',
     name: 'InputMultiFile',
