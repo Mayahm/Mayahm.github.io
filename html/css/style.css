@@ -5102,9 +5102,12 @@ input[type="search"] {
 @media (max-width: 767px) {
   .experts-block-lp__img-expert {
     margin-right: 10px;
-    width: 60px;
-    height: 60px;
+    width: 20%;
+    height: auto;
     margin-bottom: 10px;
+  }
+  .experts-block-lp__img-expert img {
+    width: 100%;
   }
 }
 .experts-block-lp__img-expert:hover {

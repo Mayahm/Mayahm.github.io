@@ -1807,21 +1807,6 @@ var VerticalTabs = {
 };
 
 App.Control.install(VerticalTabs);
-var DisputesSlider = {
-	el: '.js-disputes-slider-lp',
-	name: 'DisputesSlider',
-	initialize: function () {
-		this.$el.bxSlider({
-			slideMargin: 20,
-			adaptiveHeight: true,
-			infiniteLoop: true,
-			touchEnabled: false
-		});
-	}
-};
-
-App.Control.install(DisputesSlider);
-
 var MainNavView = {
     el: '.js-main-nav',
     name: 'MainNavView',
@@ -1873,6 +1858,21 @@ var MainSlider = {
 };
 
 App.Control.install(MainSlider);
+var DisputesSlider = {
+	el: '.js-disputes-slider-lp',
+	name: 'DisputesSlider',
+	initialize: function () {
+		this.$el.bxSlider({
+			slideMargin: 20,
+			adaptiveHeight: true,
+			infiniteLoop: true,
+			touchEnabled: false
+		});
+	}
+};
+
+App.Control.install(DisputesSlider);
+
 var VisitedPages = {
 	el: '.js-visited-pages',
 	name: 'VisitedPages',
