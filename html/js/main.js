@@ -182,7 +182,9 @@ var ClientsSlider = {
 		this.sliderMd = this.$el.bxSlider({
 			slideMargin: 20,
 			adaptiveHeight: true,
-			infiniteLoop: true
+			infiniteLoop: true,
+			slideWidth: 150,
+
 		});
 	},
 	/*resizeSlider: function(){
@@ -270,56 +272,28 @@ var EqualHeight = {
 };
 
 App.Control.install(EqualHeight);
-/*var ExpertsSlider = {
-	el: '.js-experts-block-slider',
-	name: 'ExpertsSlider',
-	slider:null,
+var ExpertsBlock = {
+	el: '.js-experts-block',
+	name: 'ExpertsBlock',
 	initialize: function () {
-		this.renderMode();
-		var self = this;
-		$(window).bind('resize', function () {
-			self.resizeSlider();
-		});
+		this.activeExpert = this.$('.js-experts-active');
+		this.btn = this.$('.js-experts-block__btn');
+		this.activeExpertIndex = this.activeExpert.index();
+		this.expertSections = this.$('.js-experts-block__section');
+		this.expertSections.eq(this.activeExpertIndex).addClass('is-active');
 	},
-	renderMode: function () {
-		var self = this;
-		if ($(window).outerWidth() < 768) {
-			self.initSlider();
-		} else {
-			self.initSlider();
-			self.slider.destroySlider();
-		}
+	events: {
+		'click .js-experts-block__btn': 'activeExperts'
 	},
-	resizeSlider: function(){
-		var self = this;
-		if ($(window).outerWidth() < 768) {
-			self.initSlider();
-		} else {
-			self.destroySlider();
-		}
-	},
-
-	initSlider: function () {
-		if(!this.slider) {
-		this.slider = this.$el.bxSlider({
-			adaptiveHeight: true,
-			infiniteLoop: true,
-			pager: false,
-			slideWidth: 106,
-			maxSlides: 2
-		});
-		}
-	},
-	destroySlider: function(){
-		if(this.slider) {
-			this.slider.destroySlider();
-			this.slider=null;
-		}
+	activeExperts: function(evt){
+		var target = $(evt.currentTarget);
+		this.btn.removeClass('experts-block-lp__img-expert--active js-experts-active');
+		target.addClass('experts-block-lp__img-expert--active js-experts-active');
+		this.expertSections.removeClass('is-active').eq(target.index()).addClass('is-active');
 	}
-
 };
 
-App.Control.install(ExpertsSlider);*/
+App.Control.install(ExpertsBlock);
 
 App.Control.install({
 		el: '.js-fancy-media',
@@ -371,16 +345,75 @@ App.Control.install({
 App.Control.install({
 	el: '.js-fancy-modal-lp',
 	name: 'FancyModalLp',
+	breakpoint: 768,
 	initialize: function () {
+		this.ratio;
 		var self = this;
+
+		if ($(window).width() >= this.breakpoint) {
+			this.ratio = 0.5;
+		} else {
+			this.ratio = 0.15;
+		}
+
 		this.$el.fancybox({
 			wrapCSS: 'fancy-modal-lp',
-			margin: ($(window).width() > 937) ? 20 : 5,
+			padding: 0,
+			margin: ($(window).width() > 937) ? 20 : 10,
+			width: '100%',
+			maxWidth: 610,
+			height: 'auto',
+			autoSize: false,
 			fitToView: false,
-			padding: 0
+			topRatio: self.ratio,
+			helpers : {
+				overlay : {
+					css : {
+						'background' : 'rgba(34, 44, 72, 0.5)'
+					}
+				}
+			}
 		});
 	}
 });
+
+
+
+App.Control.install({
+	el: '.js-fancy-modal-lp-sm',
+	name: 'FancyModalLpSmall',
+	breakpoint: 768,
+	initialize: function () {
+		this.ratio;
+		var self = this;
+
+		if ($(window).width() >= this.breakpoint) {
+			this.ratio = 0.5;
+		} else {
+			this.ratio = 0.15;
+		}
+
+		this.fancyPopup = this.$el.fancybox({
+			wrapCSS: 'fancy-modal-lp-sm',
+			padding: 0,
+			margin: ($(window).width() > 937) ? 20 : 10,
+			width: '100%',
+			maxWidth: 400,
+			height: 'auto',
+			autoSize: false,
+			fitToView: false,
+			topRatio: self.ratio,
+			helpers : {
+				overlay : {
+					css : {
+						'background' : 'rgba(34, 44, 72, 0.5)'
+					}
+				}
+			}
+		});
+	}
+});
+
 
 
 App.Control.install({
@@ -707,7 +740,8 @@ App.Control.install({
 		$formInputs = $tmpInputs.filter(':visible')
 			.add(this.$el.find('.input-file').filter(':visible').find(':file'))
 			.add(this.$el.find('.input-multifile').filter(':visible').find(':file'))
-			.add($tmpInputs.filter('input[type=hidden]'));
+			.add($tmpInputs.filter('input[type=hidden]'))
+			.add($tmpInputs.filter('[data-mustvalidate]'));
 
 		return $formInputs;
 	},
@@ -770,10 +804,12 @@ App.Control.install({
             self.privacyAgree.find('.js-form-privacy-agree-full').removeClass('hide-up-to-md hide-xs');
             self.privacyAgree.find('.js-form-privacy-agree-short').hide(0);
         });
-    this.privacyAgree.find('.js-form-privacy-agree-close-btn').on('click', function() {
+
+    	this.privacyAgree.find('.js-form-privacy-agree-close-btn').on('click', function() {
             self.privacyAgree.find('.js-form-privacy-agree-full').addClass('hide-xs');
             self.privacyAgree.find('.js-form-privacy-agree-short').show(0);
-        });},
+        });
+	},
 
 	initTabsContentControl: function () {
 		var self = this;
@@ -861,6 +897,89 @@ App.Control.install({
 		}
 		else
 			return $();
+	}
+});
+
+App.Control.extend('FormFabric', {
+	el: '.js-form-lp',
+	name: 'FormFabricLP',
+
+	/**
+	 * Get control of form
+	 */
+	initialize: function () {
+
+		/**
+		 * Check and find UI interactive fields
+		 */
+
+		this.textInputs = this.$el.find('.form-lp-input--text');
+		this.fileInputs = this.$el.find('.form-lp-input--file');
+
+		/**
+		 * More UI elements initialization...
+		 */
+
+		if (this.textInputs)
+			this.initTextInputControl();
+
+		if (this.fileInputs)
+			this.initFileInputControl();
+
+		/**
+		 * Add masks and validation rules for phone fields
+		 */
+
+		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phone'});
+		this.$el.find('input[type=\'tel\']').parsley({phone: ''});
+
+		/**
+		 * Submit by button click event handler
+		 */
+
+		if (_.isElement(this.$el.find(this.submitButton)[0]))
+			this.$el.find(this.submitButton).on('click', this.$el, _.bind(this.submitProcess, this));
+
+		/**
+		 * Get URL to send
+		 */
+		this.gateway = this.buildGatewayPath();
+
+		this.$validateFalseFields = $([]);
+	},
+
+	/**
+	 * UI controls initialises...
+	 */
+
+	initTextInputControl: function () {
+		var self = this;
+		_.each(this.textInputs, function (textInput) {
+
+			$(textInput).find('input').mouseenter( function () {
+				$(this).addClass('_hide-label');
+			} ).mouseleave( function () {
+				if(_.isEmpty($(this).val()))
+					$(this).removeClass('_hide-label');
+			} ).focusout( function () {
+				if(!$(this).val())
+					$(this).removeClass('_hide-label');
+			} );
+
+		});
+	},
+
+	initFileInputControl: function () {
+		var self = this;
+		_.each(this.fileInputs, function (fileInput) {
+
+			var $textInput = $(fileInput).find('input[type="text"]');
+
+			$(fileInput).find('input[type="file"]').change(function () {
+				$textInput.val($(this).val().replace(/.*\\/, "")).trigger('mouseenter');
+			});
+
+		});
 	}
 });
 var MainOfficeMap = {
@@ -1264,6 +1383,41 @@ var SectionNav = {
 };
 
 App.Control.install(SectionNav);
+var ShowCallbackForm = {
+	el: '.js-show-callback-form',
+	name: 'ShowCallbackForm',
+
+	initialize: function() {
+		this.btn = this.$('.js-show-callback-form__btn');
+		this.closeBtn = this.$('.js-show-callback-form__close-btn');
+		this.callbackForm = this.$('.js-show-callback-form__form');
+
+		var self = this;
+
+		$(document).on('keyup', function(e) {
+			if (e.keyCode == 27) {
+			  	self.hideFormOnClick();
+			}
+		});
+	},
+
+	events: {
+        'click .js-show-callback-form__btn': 'showFormOnClick',
+        'click .js-show-callback-form__close-btn': 'hideFormOnClick'
+    },
+
+	'showFormOnClick': function(e) {
+		$(e.currentTarget).addClass('is-hidden');
+		this.callbackForm.removeClass('is-hidden');
+	},
+
+	'hideFormOnClick': function(e) {
+		this.btn.removeClass('is-hidden');
+		this.callbackForm.addClass('is-hidden');
+	}
+};
+
+App.Control.install(ShowCallbackForm);
 var ShowContent = {
 	el: '.js-show-content',
 	name: 'ShowContent',
@@ -1306,8 +1460,7 @@ var ShowContent = {
 			$(e.currentTarget).next('.js-show-content__content').slideToggle();
 
 			if ($(window).outerWidth() <= 767) {
-				this.$el.find('.js-show-content__block').fadeToggle();
-				this.$el.toggleClass('disputes-slider-lp--open-block');
+				this.$el.find('.js-show-content__block').slideToggle();
 			}
 		}
 
@@ -1325,6 +1478,7 @@ var ShowContent = {
 };
 
 App.Control.install(ShowContent);
+
 var ShowMore = {
 	el: '.js-show-more',
 	name: 'ShowMore',
@@ -1489,7 +1643,6 @@ var SliderPriceCards = {
 		if(!this.slider) {
 			this.slider = this.$el.bxSlider({
 				pager: false,
-				controls: false,
 				slideWidth: 400,
 				slideMargin: 20,
 				minSlides: 1,
@@ -1807,6 +1960,46 @@ var VerticalTabs = {
 };
 
 App.Control.install(VerticalTabs);
+var DisputesSlider = {
+	el: '.js-disputes-slider-lp',
+	name: 'DisputesSlider',
+	slider: null,
+	initialize: function () {
+		//this.btn = this.$('.js-show-content__btn');
+		//this.block = this.$('.js-show-content__block');
+		this.slider=this.$el.bxSlider({
+			slideMargin: 20,
+			adaptiveHeight: true,
+			infiniteLoop: true
+		});
+	}/*,
+	events:{
+		'click .js-show-content__btn': 'reloadSlider'
+	},
+	reloadSlider:function(evt){
+		this.slider.redrawSlider();
+		console.log(this.slider);
+		$(evt.currentTarget).siblings('.js-show-content__block').removeClass('is-hide');
+	}*/
+
+
+};
+
+App.Control.install(DisputesSlider);
+
+var MainSlider = {
+    el: '.js-main-slider',
+    name: 'MainSlider',
+    initialize: function() {
+        this.$el.bxSlider({
+            mode: 'fade',
+            pager: false,
+            auto: true
+        });
+    }
+};
+
+App.Control.install(MainSlider);
 var MainNavView = {
     el: '.js-main-nav',
     name: 'MainNavView',
@@ -1836,7 +2029,7 @@ var MainNavView = {
     },
 
     fixedNav: function() {
-        if ( $(window).scrollTop() > this.mainNavOffsetTop + this.mainNavHeight ) {
+        if ( $(window).scrollTop() > this.mainNavOffsetTop) {
             this.$el.addClass('main-nav--fixed');
         } else {
             this.$el.removeClass('main-nav--fixed');
@@ -1845,34 +2038,6 @@ var MainNavView = {
 };
 
 App.Control.install(MainNavView);
-var MainSlider = {
-    el: '.js-main-slider',
-    name: 'MainSlider',
-    initialize: function() {
-        this.$el.bxSlider({
-            mode: 'fade',
-            pager: false,
-            auto: true
-        });
-    }
-};
-
-App.Control.install(MainSlider);
-var DisputesSlider = {
-	el: '.js-disputes-slider-lp',
-	name: 'DisputesSlider',
-	initialize: function () {
-		this.$el.bxSlider({
-			slideMargin: 20,
-			adaptiveHeight: true,
-			infiniteLoop: true,
-			touchEnabled: false
-		});
-	}
-};
-
-App.Control.install(DisputesSlider);
-
 var VisitedPages = {
 	el: '.js-visited-pages',
 	name: 'VisitedPages',
