@@ -93,13 +93,29 @@
 			<button class="main-nav__menu-btn" type="button">Меню</button>
 		</div>
 		<ul class="main-nav__list js-main-nav__list">
-			<li class="main-nav__item"><a class="main-nav__link" href="">О&nbsp;компании</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Экспертиза после ДТП</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Залив квартиры</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Независимая экспертиза</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Юристы (суд)</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Цены</a></li>
-			<li class="main-nav__item"><a class="main-nav__link" href="">Контакты</a></li>
+			<li class="main-nav__item"><a class="main-nav__link" href="#">О&nbsp;компании</a></li>
+			<li class="main-nav__item"><a class="main-nav__link main-nav__link--has-dropdown" href="#">Услуги</a>
+				<ul class="main-nav__dropdown">
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-car" href="#">Экспертиза после ДТП</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-file" href="#">Оценка автомобиля</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-dropdown main-nav__dropdown-link--has-icon-tool" href="#">Оценка качества ремонта</a>
+						<ul class="main-nav__dropdown-second">
+							<li class="main-nav__dropdown-second-item"><a class="main-nav__dropdown-second-link" href="#">Экспертиза неисправностей автомобиля</a></li>
+							<li class="main-nav__dropdown-second-item"><a class="main-nav__dropdown-second-link" href="#">Экспертиза узлов и агрегатов</a></li>
+							<li class="main-nav__dropdown-second-item"><a class="main-nav__dropdown-second-link" href="#">Экспертиза ДВС</a></li>
+							<li class="main-nav__dropdown-second-item"><a class="main-nav__dropdown-second-link" href="#">Экспертиза ЛКП</a></li>
+						</ul>
+					</li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-house" href="#">Оценка ущерба недвижимости</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-dna" href="#">Генетическая экспертиза</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-cart" href="#">Товароведческая экспертиза</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-pen" href="#">Почерковедческая экспертиза</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-court" href="#">Судебная экспертиза</a></li>
+					<li class="main-nav__dropdown-item"><a class="main-nav__dropdown-link main-nav__dropdown-link--has-icon-camera" href="#">Портретная экспертиза (фото/видео)</a></li>
+				</ul>
+			</li>
+			<li class="main-nav__item"><a class="main-nav__link" href="#">Цены</a></li>
+			<li class="main-nav__item"><a class="main-nav__link" href="#">Контакты</a></li>
 		</ul>
 	</div>
 </nav>
@@ -112,7 +128,7 @@
 <main>
 	<section class="section">
 		<div class="container">
-			<h2>Судебная строительно-техническая экспертиза</h2>
+			<h1>Судебная строительно-техническая экспертиза</h1>
 			<p>Экспертиза недвижимости – это определение реальной стоимости причиненного ущерба квартире, дому или нежилому объекту, а также установление причин возникновения ущерба (при необходимости).</p>
 			<p>В соответствии со ст. 1064 Гражданского кодекса Российской Федерации вред, нанесенный личности или имуществу гражданина, а также вред, нанесенный имуществу юридического лица, подлежит возмещению в полном объеме лицом, причинившим вред.</p>
 			<p>Основная задача, которую решают наши эксперты во время проведения технической экспертизы объектов недвижимости – это определение суммы ущерба и помощь в ее получении.</p>
@@ -122,12 +138,12 @@
 		<div class="container">
 			<h2>Когда нужна строительно-техническая экспертиза?</h2>
 			<div class="row-md">
-				<div class="text-blocks-list text-blocks-list--after-title text-blocks-list--two-column">
+				<div class="text-blocks-list text-blocks-list--two-column">
 					<div class="text-blocks-list__item text-blocks-list__item--big-drops">
 						<div class="text-blocks-list__title">Соседи затопили квартиру</div>
 						<p>Соседи залили (затопили) квартиру и необходимо определить ущерб залива квартиры</p>
 					</div>
-					<div class="text-blocks-list__item text-blocks-list__item--big-fire"> 
+					<div class="text-blocks-list__item text-blocks-list__item--big-fire">
 						<div class="text-blocks-list__title">Квартира пострадала от возгорания</div>
 						<p>Квартира пострадала от стихийного возгорания и необходимо сделать оценку ущерба квартиры</p>
 					</div>
@@ -137,7 +153,7 @@
 					</div>
 					<div class="text-blocks-list__item text-blocks-list__item--culprit-fire">
 						<div class="text-blocks-list__title">Вы стали виновником пожара</div>
-						<p>Вы считаете, что стоимость ремонта (ущерба от пожара), которую заявляет пострадавшая сторона, сильно завышена   </p>
+						<p>Вы считаете, что стоимость ремонта (ущерба от пожара), которую заявляет пострадавшая сторона, сильно завышена</p>
 					</div>
 				</div>
 			</div>
@@ -286,7 +302,7 @@
 		<div class="container">
 			<h2>Преимущества независимой строительно-технической экспертизы Хонест</h2>
 			<div class="row-md">
-				<div class="text-blocks-list text-blocks-list--after-title text-blocks-list--two-column">
+				<div class="text-blocks-list text-blocks-list--two-column">
 					<div class="text-blocks-list__item text-blocks-list__item--damage-evaluation">
 						<div class="text-blocks-list__title">Честно оцениваем ущерб</div>
 						<p>Наши эксперты проводят калькуляцию по среднерыночным ценам, с учетом расходных материалов и технологии ремонта. Обычно сумма нашей калькуляции выше калькуляции ЖЭКа.</p>
@@ -339,12 +355,12 @@
 			</div>
 		</div>
 	</div>
-	<section class="section news">
+	<section class="section">
 		<div class="container">
 			<h2><a href="">Новости и статьи</a></h2>
-			<div class="news__list section__last-block">
-				<div class="js-news-slider">
-					<div>
+			<div class="slider-news section__last-block">
+				<div class="js-slider-news">
+					<div class="slider-news__slide">
 						<div class="news-preview"><img class="news-preview__img" src="../../assets/images/img-news--item1-min.jpg" alt=""/>
 							<div class="news-preview__text"><a class="news-preview__title" href="">Как сделать бесплатный ремонт по ОСАГО в случае не новой машины</a>
 								<div class="news-preview__meta">
@@ -360,7 +376,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="slider-news__slide">
 						<div class="news-preview"><img class="news-preview__img" src="../../assets/images/img-news--item2-min.jpg" alt=""/>
 							<div class="news-preview__text"><a class="news-preview__title" href="">Какие бывают юристы и адвокаты</a>
 								<div class="news-preview__meta">
@@ -376,7 +392,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="slider-news__slide">
 						<div class="news-preview"><img class="news-preview__img" src="../../assets/images/img-news--item2-min.jpg" alt=""/>
 							<div class="news-preview__text"><a class="news-preview__title" href="">Какие бывают юристы и адвокаты</a>
 								<div class="news-preview__meta">
@@ -569,7 +585,7 @@
 			<textarea class="field-text__input field-text__input--textarea" id="comment"></textarea>
 		</div>
 		<div class="form__group">
-			<input class="btn btn--brand" type="submit" value="Заказать"/>
+			<input class="btn" type="submit" value="Заказать"/>
 		</div>
 	</form>
 </div>
@@ -589,7 +605,7 @@
 			<textarea class="field-text__input field-text__input--textarea" id="comment"></textarea>
 		</div>
 		<div class="form__group">
-			<input class="btn btn--brand" type="submit" value="Заказать"/>
+			<input class="btn" type="submit" value="Заказать"/>
 		</div>
 		<div class="form__group"><small class="form__info">Мы гарантируем сохранность ваших персональных данных и не будет передавать ваши контакты третьим лицам. Нажимая на кнопку «Заказать», вы даете согласие на <a class="link link--black" href="">обработку своих персональных данных</a></small></div>
 	</form>
