@@ -579,7 +579,7 @@ App.Control.install({
 		 * Add masks and validation rules for phone fields
 		 */
 
-		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phone'});
+		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phoneru'});
 		this.$el.find('input[type=\'tel\']').parsley({phone: ''});
 
 		/**
@@ -920,8 +920,8 @@ App.Control.extend('FormFabric', {
 		 * More UI elements initialization...
 		 */
 
-		if (this.textInputs)
-			this.initTextInputControl();
+		/*if (this.textInputs)
+			this.initTextInputControl();*/
 
 		if (this.fileInputs)
 			this.initFileInputControl();
@@ -930,8 +930,9 @@ App.Control.extend('FormFabric', {
 		 * Add masks and validation rules for phone fields
 		 */
 
-		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phone'});
+		this.$el.find('input[type=\'tel\']').inputmask({alias: 'phoneru'});
 		this.$el.find('input[type=\'tel\']').parsley({phone: ''});
+		this.$el.find('input[data-mustchecked=\'data-mustchecked\']').parsley({mustchecked: '', multiple: this.cid});
 
 		/**
 		 * Submit by button click event handler
@@ -976,7 +977,7 @@ App.Control.extend('FormFabric', {
 			var $textInput = $(fileInput).find('input[type="text"]');
 
 			$(fileInput).find('input[type="file"]').change(function () {
-				$textInput.val($(this).val().replace(/.*\\/, "")).trigger('mouseenter');
+				$textInput.val($(this).val().replace(/.*\\/, "")).trigger('change');
 			});
 
 		});
